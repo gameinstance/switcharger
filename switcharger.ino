@@ -7,8 +7,11 @@ const float VCC_ARDUINO = 5.00; // Volts
 const float VBAT_MAX = 14.4; // Volts
 const float VBAT_FLOAT = 13.8; // Volts
 const float VBAT_FLOAT_LOW = 12.8; // Volts
+const unsigned long ACTIVATION_DELAY = 5000; // ms
+
 
 int state;
+unsigned long activationTime, nowTime;
 float Vin, Vbat;
 
 float readVoltage(int pin, int R1, int R2) {
@@ -35,6 +38,7 @@ void ActivateCharging(bool bEnable = true) {
   // 
   if (bEnable) {
     // 
+    activationTime = millis();
     digitalWrite(OUT_CHARGE_ENABLE, HIGH);
   } else {
     // 
@@ -48,6 +52,8 @@ void setup() {
   pinMode(SENSOR_VOLTAGE_PANEL, INPUT);
   pinMode(SENSOR_VOLTAGE_BATTERY, INPUT);
   ActivateCharging(false);
+  nowTime = 0;
+  activationTime = 0;
   state = 0;
 }
 
@@ -59,6 +65,7 @@ void loop() {
     // 
     ActivateCharging(false);
     state = 0;
+    delay(500);
     return;
   }
   if (state == 0) {
@@ -79,7 +86,13 @@ void loop() {
       ActivateCharging(false);
     } else if (Vbat < VBAT_FLOAT_LOW) {
       //
-      ActivateCharging();
+      nowTime = millis();
+      if ((nowTime < activationTime) 
+        || (nowTime > activationTime + ACTIVATION_DELAY)) {
+        // 
+        ActivateCharging();
+      }
     }
   }
+  delay(500);
 }
