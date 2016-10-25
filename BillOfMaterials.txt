@@ -1,0 +1,12 @@
+1 x Arduino Pro Mini or a clone
+1 x IRF4905
+1 x 2N3904
+3 x UF4007
+2 x 100 kOhm
+2 x 10 kOhm
+1 x 1 MOhm
+1 x 470 Ohm
+1 x 51 kOhm
+2 x 100nF
+1 x 5A Fuse
+1 x LM7805
